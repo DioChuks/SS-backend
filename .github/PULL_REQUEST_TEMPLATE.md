@@ -21,6 +21,9 @@ Closes #<!-- issue number -->
 
 <!-- Mark with an 'x' when complete -->
 
+- [ ] **All GitHub Actions workflows are green** on this PR (required for merge)
+- [ ] Commit messages follow **Conventional Commits** (`feat:`, `fix:`, `chore:`, etc.) — enforced by CI
+- [ ] No secrets, API keys, `.env`, or credentials committed (see `CONTRIBUTING.md`)
 - [ ] My code follows the code style of this project
 - [ ] I have performed a self-review of my own code
 - [ ] I have commented my code, particularly in hard-to-understand areas

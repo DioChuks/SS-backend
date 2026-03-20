@@ -1,6 +1,9 @@
 # Cursor / IDE (do not commit project-specific AI rules)
 .cursorrules
 
+# Local copies of GitHub issue bodies (sync with `gh issue edit`; issues live on GitHub)
+.github-issue-drafts/
+
 # Dependencies
 node_modules/
 
