@@ -1,5 +1,10 @@
 import type { Request, Response } from "express";
 import type { AuthService } from "../services/auth.service";
+import type { AuthenticatedRequestUser } from "../types/auth";
+
+interface AuthenticatedRequest extends Request {
+  user?: AuthenticatedRequestUser;
+}
 
 export function createAuthController(authService: AuthService) {
   return {
@@ -17,7 +22,7 @@ export function createAuthController(authService: AuthService) {
     },
     me: async (req: Request, res: Response): Promise<void> => {
       res.status(200).json({
-        user: req.user,
+        user: (req as any).user,
       });
     },
   };

@@ -1,3 +1,4 @@
+// src/types/auth.ts
 import { KYCStatus, UserType } from "./enums";
 
 export interface PublicUser {
