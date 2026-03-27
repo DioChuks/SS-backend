@@ -1,11 +1,19 @@
 import { KYCStatus } from "@/types/enums";
-import type { AuthenticatedRequestUser } from "@/types/auth";
 
-export function requireApprovedKYC(user: Pick<AuthenticatedRequestUser, "kycStatus">) {
+export class KYCError extends Error {
+  status: number;
+  code: string;
+
+  constructor(message: string, code = "KYC_NOT_APPROVED", status = 403) {
+    super(message);
+    this.name = "KYCError";
+    this.code = code;
+    this.status = status;
+  }
+}
+
+export function requireApprovedKYC(user: { kycStatus: KYCStatus }) {
   if (user.kycStatus !== KYCStatus.APPROVED) {
-    const error: any = new Error("KYC not approved");
-    error.status = 403;
-    error.code = "KYC_NOT_APPROVED";
-    throw error;
+    throw new KYCError("KYC not approved");
   }
 }
