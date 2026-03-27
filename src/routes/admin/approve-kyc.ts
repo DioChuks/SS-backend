@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { DataSource } from "typeorm";
 import { User } from "@/entities/User";
 import { KYCStatus } from "@/types/enums";
@@ -11,7 +11,6 @@ export async function approveKYC(req: Request, res: Response, dataSource: DataSo
     }
 
     const { userId } = req.body as { userId: string };
-
     const userRepo = dataSource.getRepository(User);
     await userRepo.update(userId, { kycStatus: KYCStatus.APPROVED });
 

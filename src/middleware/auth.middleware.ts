@@ -1,11 +1,7 @@
-import type { Request, Response, NextFunction } from "express";
+import type { NextFunction, Response } from "express";
 import type { AuthService } from "../services/auth.service";
+import type { AuthenticatedRequest } from "../types/auth";
 import { HttpError } from "../utils/http-error";
-import type { AuthenticatedRequestUser } from "../types/auth";
-
-export interface AuthenticatedRequest extends Request {
-  user?: AuthenticatedRequestUser;
-}
 
 export function createAuthMiddleware(authService: AuthService) {
   return async (
@@ -21,6 +17,7 @@ export function createAuthMiddleware(authService: AuthService) {
     }
 
     const token = authorizationHeader.slice("Bearer ".length).trim();
+
     if (!token) {
       next(new HttpError(401, "Authorization token is required."));
       return;

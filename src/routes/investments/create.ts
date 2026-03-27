@@ -1,12 +1,13 @@
-import { Request, Response } from "express";
+import type { Response } from "express";
+import type { AuthenticatedRequest } from "@/types/auth";
 import { requireApprovedKYC } from "@/lib/kyc";
 import { KYCStatus } from "@/types/enums";
 
-export async function createInvestment(req: Request, res: Response) {
+export async function createInvestment(req: AuthenticatedRequest, res: Response) {
   try {
-    const user = req.user as { kycStatus: KYCStatus };
+    if (!req.user) return res.status(401).json({ message: "Unauthorized" });
 
-    requireApprovedKYC(user);
+    requireApprovedKYC(req.user);
 
     // Your investment logic here
     return res.status(201).json({ success: true });
