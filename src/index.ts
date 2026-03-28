@@ -5,6 +5,7 @@ import { getConfig } from "./config/env";
 import { getPaymentVerificationConfig } from "./config/stellar";
 import { logger } from "./observability/logger";
 import { createAuthService } from "./services/auth.service";
+import { createMarketplaceService } from "./services/marketplace.service";
 import { createVerifyPaymentService } from "./services/stellar/verify-payment.service";
 import { createReconcilePendingStellarStateWorker } from "./workers/reconcile-pending-stellar-state.worker";
 
@@ -40,9 +41,11 @@ export async function bootstrap(): Promise<ApplicationRuntime> {
   }
 
   const authService = createAuthService(dataSource, config);
+  const marketplaceService = createMarketplaceService(dataSource);
   const requestLifecycleTracker = createRequestLifecycleTracker();
   const app = createApp({
     authService,
+    marketplaceService,
     logger,
     metricsEnabled: config.observability.metricsEnabled,
     http: {
