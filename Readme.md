@@ -158,17 +158,18 @@ POST   /api/invoices/:id/payment    # Record payment
 POST   /api/v1/invoices/:id/document # Upload supporting document (PDF/image)
 ```
 
+### Marketplace
+```
+GET    /api/v1/marketplace/invoices  # Browse published invoices (public, no auth required)
+```
+
+**Note**: The marketplace endpoint provides public read access to published invoices for investor discovery. See [docs/MARKETPLACE_API.md](docs/MARKETPLACE_API.md) for detailed documentation.
+
 ### Investments
 ```
 GET    /api/investments              # List user investments
 POST   /api/investments              # Invest in invoice
 GET    /api/investments/:id          # Get investment details
-```
-
-### Marketplace
-```
-GET    /api/marketplace              # Browse available invoices
-GET    /api/marketplace/stats        # Market statistics
 ```
 
 ### Dashboard
