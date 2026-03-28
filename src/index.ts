@@ -5,7 +5,8 @@ import { getConfig } from "./config/env";
 import { getPaymentVerificationConfig } from "./config/stellar";
 import { logger } from "./observability/logger";
 import { createAuthService } from "./services/auth.service";
-import { createMarketplaceService } from "./services/marketplace.service";
+import { createIPFSService } from "./services/ipfs.service";
+import { createInvoiceService } from "./services/invoice.service";
 import { createVerifyPaymentService } from "./services/stellar/verify-payment.service";
 import { createReconcilePendingStellarStateWorker } from "./workers/reconcile-pending-stellar-state.worker";
 
@@ -41,11 +42,12 @@ export async function bootstrap(): Promise<ApplicationRuntime> {
   }
 
   const authService = createAuthService(dataSource, config);
-  const marketplaceService = createMarketplaceService(dataSource);
+  const ipfsService = createIPFSService(config.ipfs);
+  const invoiceService = createInvoiceService(dataSource, ipfsService);
   const requestLifecycleTracker = createRequestLifecycleTracker();
   const app = createApp({
     authService,
-    marketplaceService,
+    invoiceService,
     logger,
     metricsEnabled: config.observability.metricsEnabled,
     http: {
@@ -55,6 +57,7 @@ export async function bootstrap(): Promise<ApplicationRuntime> {
       bodySizeLimit: config.http.bodySizeLimit,
       nodeEnv: config.nodeEnv,
     },
+    ipfsConfig: config.ipfs,
     requestLifecycleTracker,
   });
   const server = await new Promise<Server>((resolve) => {

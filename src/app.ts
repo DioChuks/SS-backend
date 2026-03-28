@@ -6,13 +6,14 @@ import { createRequestObservabilityMiddleware } from "./middleware/request-obser
 import { logger, type AppLogger } from "./observability/logger";
 import { getMetricsContentType, MetricsRegistry } from "./observability/metrics";
 import { createAuthRouter } from "./routes/auth.routes";
-import { createMarketplaceRouter } from "./routes/marketplace.routes";
+import { createInvoiceRouter } from "./routes/invoice.routes";
 import type { AuthService } from "./services/auth.service";
-import type { MarketplaceService } from "./services/marketplace.service";
+import type { InvoiceService } from "./services/invoice.service";
+import type { AppConfig } from "./config/env";
 
 export interface AppDependencies {
   authService: AuthService;
-  marketplaceService?: MarketplaceService;
+  invoiceService?: InvoiceService;
   logger?: AppLogger;
   metricsEnabled?: boolean;
   metricsRegistry?: MetricsRegistry;
@@ -23,6 +24,7 @@ export interface AppDependencies {
     bodySizeLimit?: string;
     nodeEnv?: string;
   };
+  ipfsConfig?: AppConfig["ipfs"];
   requestLifecycleTracker?: RequestLifecycleTracker;
 }
 
@@ -108,11 +110,12 @@ export function createRequestLifecycleTracker(): RequestLifecycleTracker {
 
 export function createApp({
   authService,
-  marketplaceService,
+  invoiceService,
   logger: appLogger = logger,
   metricsEnabled = true,
   metricsRegistry = new MetricsRegistry(),
   http,
+  ipfsConfig,
   requestLifecycleTracker = createRequestLifecycleTracker(),
 }: AppDependencies) {
   const app = express();
@@ -171,10 +174,11 @@ export function createApp({
 
   app.use("/api/v1/auth", createAuthRouter(authService));
 
-  // Add marketplace routes if service is provided
-  if (marketplaceService) {
-    app.use("/api/v1/marketplace", createMarketplaceRouter({
-      marketplaceService,
+  // Add invoice routes if service is provided
+  if (invoiceService && ipfsConfig) {
+    app.use("/api/v1/invoices", createInvoiceRouter({
+      invoiceService,
+      config: ipfsConfig,
     }));
   }
 
