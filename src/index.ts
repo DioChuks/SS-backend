@@ -51,6 +51,7 @@ export async function bootstrap(): Promise<ApplicationRuntime> {
       corsAllowCredentials: config.http.corsAllowCredentials,
       bodySizeLimit: config.http.bodySizeLimit,
       nodeEnv: config.nodeEnv,
+      rateLimit: config.http.rateLimit,
     },
     requestLifecycleTracker,
   });
