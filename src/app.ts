@@ -6,10 +6,13 @@ import { createRequestObservabilityMiddleware } from "./middleware/request-obser
 import { logger, type AppLogger } from "./observability/logger";
 import { getMetricsContentType, MetricsRegistry } from "./observability/metrics";
 import { createAuthRouter } from "./routes/auth.routes";
+import { createMarketplaceRouter } from "./routes/marketplace.routes";
 import type { AuthService } from "./services/auth.service";
+import type { MarketplaceService } from "./services/marketplace.service";
 
 export interface AppDependencies {
   authService: AuthService;
+  marketplaceService?: MarketplaceService;
   logger?: AppLogger;
   metricsEnabled?: boolean;
   metricsRegistry?: MetricsRegistry;
@@ -105,6 +108,7 @@ export function createRequestLifecycleTracker(): RequestLifecycleTracker {
 
 export function createApp({
   authService,
+  marketplaceService,
   logger: appLogger = logger,
   metricsEnabled = true,
   metricsRegistry = new MetricsRegistry(),
@@ -166,6 +170,13 @@ export function createApp({
   }
 
   app.use("/api/v1/auth", createAuthRouter(authService));
+
+  // Add marketplace routes if service is provided
+  if (marketplaceService) {
+    app.use("/api/v1/marketplace", createMarketplaceRouter({
+      marketplaceService,
+    }));
+  }
 
   app.use(notFoundMiddleware);
   app.use(createErrorMiddleware(appLogger));
