@@ -105,6 +105,10 @@ TOKEN_CONTRACT_ID=CXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 # IPFS
 IPFS_API_URL=https://api.pinata.cloud
 IPFS_JWT=your_pinata_jwt_token
+IPFS_MAX_FILE_SIZE_MB=10
+IPFS_ALLOWED_MIME_TYPES=application/pdf,image/jpeg,image/png,image/gif,image/webp
+IPFS_UPLOAD_RATE_LIMIT_WINDOW_MS=900000
+IPFS_UPLOAD_RATE_LIMIT_MAX_UPLOADS=10
 
 # JWT
 JWT_SECRET=your-super-secret-jwt-key
@@ -126,6 +130,11 @@ SENDGRID_API_KEY=SG.xxxxxxxxxxxxx
 FROM_EMAIL=noreply@stellarsettle.com
 ```
 
+**Obtaining Pinata Credentials:**
+1. Sign up at [Pinata](https://pinata.cloud/)
+2. Create an API key with pinning permissions
+3. Use the API key as your `IPFS_JWT` value
+
 ## 📡 API Endpoints
 
 ### Authentication
@@ -146,6 +155,7 @@ PUT    /api/invoices/:id            # Update invoice
 DELETE /api/invoices/:id            # Delete invoice
 POST   /api/invoices/:id/publish    # Publish to marketplace
 POST   /api/invoices/:id/payment    # Record payment
+POST   /api/v1/invoices/:id/document # Upload supporting document (PDF/image)
 ```
 
 ### Investments
